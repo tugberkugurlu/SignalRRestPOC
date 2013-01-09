@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRRestPOC.Web", "SignalRRestPOC.Web\SignalRRestPOC.Web.csproj", "{D93651CF-7ADE-4D5E-A16E-865C8E4240BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D93651CF-7ADE-4D5E-A16E-865C8E4240BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D93651CF-7ADE-4D5E-A16E-865C8E4240BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D93651CF-7ADE-4D5E-A16E-865C8E4240BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D93651CF-7ADE-4D5E-A16E-865C8E4240BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
