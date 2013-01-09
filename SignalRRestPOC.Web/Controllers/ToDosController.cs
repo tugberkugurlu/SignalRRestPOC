@@ -12,18 +12,19 @@ namespace SignalRRestPOC.Web.Controllers {
 
     public class ToDo {
 
+        public int Id { get; set; }
         public string ThingToDo { get; set; }
         public bool IsCompleted { get; set; }
         public string CompletedBy { get; set; }
-        public DateTime CompletedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
     }
 
     public class ToDosController : HubApiController<ToDoHub> {
 
-        private static readonly ConcurrentDictionary<Guid, ToDo> _context = new ConcurrentDictionary<Guid, ToDo>(
-            new List<KeyValuePair<Guid, ToDo>> { 
-                new KeyValuePair<Guid, ToDo>(Guid.NewGuid(), new ToDo {  
-                    ThingToDo = "Wash your clothes", IsCompleted = false
+        private static readonly ConcurrentDictionary<int, ToDo> _context = new ConcurrentDictionary<int, ToDo>(
+            new List<KeyValuePair<int, ToDo>> { 
+                new KeyValuePair<int, ToDo>(1, new ToDo { 
+                    Id = 1, ThingToDo = "Wash your clothes", IsCompleted = false
                 })
             }
         );
@@ -34,7 +35,7 @@ namespace SignalRRestPOC.Web.Controllers {
             return _context.Values;
         }
 
-        public ToDo Get(Guid id) {
+        public ToDo Get(int id) {
 
             ToDo toDo;
             _context.TryGetValue(id, out toDo);
@@ -48,25 +49,32 @@ namespace SignalRRestPOC.Web.Controllers {
 
         public HttpResponseMessage PostToDo(ToDo toDo) {
 
-            Guid id = Guid.NewGuid();
+            int id = _context.Max(x => x.Key) + 1;
+            toDo.Id = id;
             if (!_context.TryAdd(id, toDo)) {
 
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
-            HubContext.Clients.All.toDoAdded(id, toDo);
+            HubContext.Clients.All.toDoAdded(toDo);
 
             return Request.CreateResponse(HttpStatusCode.OK, toDo);
         }
 
         // PUT api/todos/1
-        public ToDo PutToDo(Guid id, ToDo updatedToDo) {
+        public ToDo PutToDo(int id, ToDo updatedToDo) {
 
             ToDo toDo;
             _context.TryGetValue(id, out toDo);
             if (toDo == null) {
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (!toDo.IsCompleted && updatedToDo.IsCompleted) {
+
+                updatedToDo.CompletedBy = "User";
+                updatedToDo.CompletedOn = DateTime.Now;
             }
 
             _context.AddOrUpdate(id, updatedToDo, (_, __) => updatedToDo);
